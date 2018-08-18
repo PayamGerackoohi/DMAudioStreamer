@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="128dp"
-    android:background="@color/md_blue_grey_900"
+    android:background="@color/md_white_1000"
     android:orientation="horizontal">
 
     <RelativeLayout
@@ -42,10 +42,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="4dp"
-                android:gravity="top|left"
+                android:gravity="right"
                 android:singleLine="true"
-                android:text=""
-                android:textColor="#ffffffff"
+                android:textColor="@color/md_grey_900"
                 android:textSize="14sp" />
 
             <TextView
@@ -54,9 +53,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="1dp"
+                android:gravity="right"
                 android:singleLine="true"
-                android:text=""
-                android:textColor="@android:color/white"
+                android:textColor="@color/md_grey_900"
                 android:textSize="14sp" />
 
             <TextView
@@ -66,8 +65,8 @@
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="1dp"
                 android:singleLine="true"
-                android:text=""
-                android:textColor="@android:color/white"
+                android:gravity="right"
+                android:textColor="@color/md_grey_900"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -80,7 +79,8 @@
             android:background="@drawable/bar_selector_white"
             android:padding="10dp"
             android:scaleType="center"
-            android:src="@drawable/ic_close_white" />
+            android:src="@drawable/ic_close_white"
+            android:tint="@color/md_grey_900" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -104,7 +104,8 @@
                 android:layout_marginRight="10dp"
                 android:background="@drawable/bar_selector_white"
                 android:scaleType="center"
-                android:src="@drawable/ic_rew_dark" />
+                android:src="@drawable/ic_rew_dark"
+                android:tint="@color/buttons_color" />
 
             <ImageView
                 android:id="@+id/player_pause"
@@ -114,7 +115,8 @@
                 android:layout_marginRight="10dp"
                 android:background="@drawable/bar_selector_white"
                 android:scaleType="center"
-                android:src="@drawable/ic_action_pause" />
+                android:src="@drawable/ic_action_pause"
+                android:tint="@color/buttons_color" />
 
             <ImageView
                 android:id="@+id/player_play"
@@ -125,6 +127,7 @@
                 android:background="@drawable/bar_selector_white"
                 android:scaleType="center"
                 android:src="@drawable/ic_action_play"
+                android:tint="@color/buttons_color"
                 android:visibility="gone" />
 
             <ImageView
@@ -135,7 +138,8 @@
                 android:layout_marginRight="10dp"
                 android:background="@drawable/bar_selector_white"
                 android:scaleType="center"
-                android:src="@drawable/ic_fwd_dark" />
+                android:src="@drawable/ic_fwd_dark"
+                android:tint="@color/buttons_color" />
         </LinearLayout>
     </FrameLayout>
 

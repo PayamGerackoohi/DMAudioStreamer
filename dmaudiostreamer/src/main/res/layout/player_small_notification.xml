@@ -1,72 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/md_blue_grey_900">
+    android:layout_height="wrap_content"
+    android:background="@color/md_white_1000">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/transparent" />
 
     <ImageView
         android:id="@+id/player_album_art"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="12dp"
-        android:scaleType="fitXY" />
+        android:layout_marginRight="12dp"
+        android:layout_toLeftOf="@+id/player_close"
+        android:scaleType="fitXY"
+        android:src="@drawable/bg_default_album_art" />
 
-    <TextView
-        android:id="@+id/player_song_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="64dp"
-        android:layout_marginRight="180dp"
-        android:layout_marginTop="12dp"
-        android:gravity="top|left"
-        android:singleLine="true"
-        android:textColor="#ffffffff"
-        android:textSize="16dp" />
 
     <ImageView
         android:id="@+id/player_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:padding="8dp"
         android:background="@drawable/bar_selector_white"
+        android:padding="8dp"
         android:scaleType="center"
-        android:src="@drawable/ic_close_white" />
+        android:src="@drawable/ic_close_white"
+        android:tint="@color/md_grey_900"/>
 
-    <TextView
-        android:id="@+id/player_author_name"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="64dp"
-        android:layout_marginRight="180dp"
-        android:layout_marginTop="33dp"
-        android:singleLine="true"
-        android:textColor="@android:color/white"
-        android:textSize="13dp" />
+        android:layout_marginRight="8dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/player_album_art"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/player_song_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:singleLine="true"
+            android:text="نام"
+            android:textColor="@color/md_grey_900"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/player_author_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:singleLine="true"
+            android:text="خواننده"
+            android:textColor="@color/md_grey_900"
+            android:textSize="12dp" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="40dp"
         android:gravity="center"
         android:orientation="horizontal">
 
-        <ProgressBar
-            android:id="@+id/player_progress_bar"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:layout_marginRight="56dp"
-            android:indeterminateDrawable="@drawable/loading_animation"
-            android:indeterminateDuration="1500" />
 
         <ImageView
             android:id="@+id/player_previous"
@@ -76,7 +74,8 @@
             android:layout_marginRight="8dp"
             android:background="@drawable/bar_selector_white"
             android:scaleType="center"
-            android:src="@drawable/ic_rew_dark" />
+            android:src="@drawable/ic_rew_dark"
+            android:tint="@color/buttons_color" />
 
         <ImageView
             android:id="@+id/player_pause"
@@ -86,7 +85,8 @@
             android:layout_marginRight="8dp"
             android:background="@drawable/bar_selector_white"
             android:scaleType="center"
-            android:src="@drawable/ic_action_pause" />
+            android:src="@drawable/ic_action_pause"
+            android:tint="@color/buttons_color" />
 
         <ImageView
             android:id="@+id/player_play"
@@ -97,6 +97,7 @@
             android:background="@drawable/bar_selector_white"
             android:scaleType="center"
             android:src="@drawable/ic_action_play"
+            android:tint="@color/buttons_color"
             android:visibility="gone" />
 
         <ImageView
@@ -107,7 +108,17 @@
             android:layout_marginRight="8dp"
             android:background="@drawable/bar_selector_white"
             android:scaleType="center"
-            android:src="@drawable/ic_fwd_dark" />
+            android:src="@drawable/ic_fwd_dark"
+            android:tint="@color/buttons_color" />
+
+        <ProgressBar
+            android:id="@+id/player_progress_bar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="56dp"
+            android:indeterminateDrawable="@drawable/loading_animation"
+            android:indeterminateDuration="1500" />
     </LinearLayout>
 
 </RelativeLayout>
