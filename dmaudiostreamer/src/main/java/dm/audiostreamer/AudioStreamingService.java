@@ -208,10 +208,23 @@ public class AudioStreamingService extends Service implements NotificationManage
             options.placeholder(R.drawable.bg_default_album_art);
 
 
+            if (supportBigNotifications) {
+                NotificationTarget notificationTargetBig = new NotificationTarget(
+                        this,
+                        R.id.player_album_art,
+                        notification.bigContentView,
+                        notification,
+                        NOTIFICATION_ID);
+                Glide.with(this)
+                        .applyDefaultRequestOptions(options)
+                        .asBitmap()
+                        .load(audioInfo.getMediaArt())
+                        .into(notificationTargetBig);
+            }
             NotificationTarget notificationTarget = new NotificationTarget(
                     this,
                     R.id.player_album_art,
-                    expandedView,
+                    notification.contentView,
                     notification,
                     NOTIFICATION_ID);
 
@@ -255,7 +268,7 @@ public class AudioStreamingService extends Service implements NotificationManage
 //                notification.bigContentView.setTextViewText(R.id.player_albumname, albumName);
             }
             notification.flags |= Notification.FLAG_ONGOING_EVENT;
-            startForeground(5, notification);
+            startForeground(NOTIFICATION_ID, notification);
 
             if (remoteControlClient != null) {
                 RemoteControlClient.MetadataEditor metadataEditor = remoteControlClient.editMetadata(true);
