@@ -25,6 +25,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.NotificationTarget;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 
@@ -51,6 +55,9 @@ public class AudioStreamingService extends Service implements NotificationManage
     private AudioStreamingManager audioStreamingManager;
     private PhoneStateListener phoneStateListener;
     public PendingIntent pendingIntent;
+
+    private static final int NOTIFICATION_ID = 523;
+    private static final String CHANNEL_ID = "GRAMOPHONE_CHANNEL";
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -157,10 +164,10 @@ public class AudioStreamingService extends Service implements NotificationManage
 
             Notification notification = null;
             if (pendingIntent != null) {
-                notification = new NotificationCompat.Builder(getApplicationContext()).setSmallIcon(R.drawable.player)
+                notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID).setSmallIcon(R.drawable.player)
                         .setContentIntent(pendingIntent).setContentTitle(songName).build();
             } else {
-                notification = new NotificationCompat.Builder(getApplicationContext()).setSmallIcon(R.drawable.player)
+                notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID).setSmallIcon(R.drawable.player)
                         .setContentTitle(songName).build();
             }
 
@@ -175,24 +182,46 @@ public class AudioStreamingService extends Service implements NotificationManage
             }
 
             Bitmap albumArt = null;
-            try {
-                ImageLoader imageLoader = ImageLoader.getInstance();
-                albumArt = imageLoader.loadImageSync(audioInfo.getMediaArt());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+//            try {
+//                ImageLoader imageLoader = ImageLoader.getInstance();
+//                albumArt = imageLoader.loadImageSync(audioInfo.getMediaArt());
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//            if (albumArt != null) {
+//                notification.contentView.setImageViewBitmap(R.id.player_album_art, albumArt);
+//                if (supportBigNotifications) {
+//                    notification.bigContentView.setImageViewBitmap(R.id.player_album_art, albumArt);
+//                }
+//            } else {
+//                notification.contentView.setImageViewResource(R.id.player_album_art, R.drawable.bg_default_album_art);
+//                if (supportBigNotifications) {
+//                    notification.bigContentView.setImageViewResource(R.id.player_album_art, R.drawable.bg_default_album_art);
+//                }
+//            }
 
-            if (albumArt != null) {
-                notification.contentView.setImageViewBitmap(R.id.player_album_art, albumArt);
-                if (supportBigNotifications) {
-                    notification.bigContentView.setImageViewBitmap(R.id.player_album_art, albumArt);
-                }
-            } else {
-                notification.contentView.setImageViewResource(R.id.player_album_art, R.drawable.bg_default_album_art);
-                if (supportBigNotifications) {
-                    notification.bigContentView.setImageViewResource(R.id.player_album_art, R.drawable.bg_default_album_art);
-                }
-            }
+
+            RequestOptions options = new RequestOptions();
+            options.diskCacheStrategy(DiskCacheStrategy.ALL);
+            options.centerCrop();
+            options.placeholder(R.drawable.bg_default_album_art);
+
+
+            NotificationTarget notificationTarget = new NotificationTarget(
+                    this,
+                    R.id.player_album_art,
+                    expandedView,
+                    notification,
+                    NOTIFICATION_ID);
+
+            Glide.with(this)
+                    .applyDefaultRequestOptions(options)
+                    .asBitmap()
+                    .load(audioInfo.getMediaArt())
+                    .into(notificationTarget);
+
+
             notification.contentView.setViewVisibility(R.id.player_progress_bar, View.GONE);
             notification.contentView.setViewVisibility(R.id.player_next, View.VISIBLE);
             notification.contentView.setViewVisibility(R.id.player_previous, View.VISIBLE);
@@ -237,9 +266,13 @@ public class AudioStreamingService extends Service implements NotificationManage
                 }
                 metadataEditor.apply();
             }
-        } catch (Exception e) {
+        } catch (
+                Exception e)
+
+        {
             e.printStackTrace();
         }
+
     }
 
     public void setListeners(RemoteViews view) {
