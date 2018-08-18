@@ -6,7 +6,7 @@
 package dm.audiostreamer;
 
 
-;
+
 import android.util.Log;
 
 public class Logger {
