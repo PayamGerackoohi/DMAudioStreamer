@@ -5,8 +5,6 @@
  */
 package dm.audiostreamer;
 
-
-
 import android.util.Log;
 
 public class Logger {
@@ -27,15 +25,15 @@ public class Logger {
 
 
     public static void v(String tag, Object... messages) {
-        if (BuildConfig.DEBUG) {
-            log(tag, Log.VERBOSE, null, messages);
-        }
+//        if (BuildConfig.DEBUG) {
+//            log(tag, Log.VERBOSE, null, messages);
+//        }
     }
 
     public static void d(String tag, Object... messages) {
-        if (BuildConfig.DEBUG) {
-            log(tag, Log.DEBUG, null, messages);
-        }
+//        if (BuildConfig.DEBUG) {
+//            log(tag, Log.DEBUG, null, messages);
+//        }
     }
 
     public static void i(String tag, Object... messages) {
