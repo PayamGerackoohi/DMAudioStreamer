@@ -95,6 +95,10 @@ public class AudioStreamingManager extends StreamingManager {
         }
     }
 
+    public List<MediaMetaData> getMediaList() {
+        return mediaList;
+    }
+
     public void clearList() {
         if (this.mediaList != null && mediaList.size() > 0) {
             this.mediaList.clear();
@@ -205,7 +209,7 @@ public class AudioStreamingManager extends StreamingManager {
         }
     }
 
-    private void setPendingIntent(){
+    private void setPendingIntent() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -213,7 +217,7 @@ public class AudioStreamingManager extends StreamingManager {
                     NotificationManager.getInstance().postNotificationName(NotificationManager.setAnyPendingIntent, pendingIntent);
                 }
             }
-        },400);
+        }, 400);
     }
 
     public void handlePauseRequest() {
@@ -257,7 +261,7 @@ public class AudioStreamingManager extends StreamingManager {
                 }
 
                 instance.mLastPlaybackState = state;
-                if(instance.currentAudio!=null){
+                if (instance.currentAudio != null) {
                     instance.currentAudio.setPlayState(state);
                 }
                 if (instance.showPlayerNotification) {
