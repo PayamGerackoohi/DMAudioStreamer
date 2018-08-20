@@ -14,6 +14,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -166,6 +167,8 @@ public class AudioStreamingManager extends StreamingManager {
     @Override
     public void onSkipToNext() {
         int nextIndex = index + 1;
+        if (shuffleEnable)
+            nextIndex = getRandomIndex();
         if (!isValidIndex(true, nextIndex))
             if (repeatEnable)
                 nextIndex = 0;
@@ -184,7 +187,8 @@ public class AudioStreamingManager extends StreamingManager {
     @Override
     public void onSkipToPrevious() {
         int prvIndex = index - 1;
-
+        if (shuffleEnable)
+            prvIndex = getRandomIndex();
         if (!isValidIndex(true, prvIndex))
             if (repeatEnable)
                 prvIndex = mediaList.size() - 1;
@@ -197,6 +201,11 @@ public class AudioStreamingManager extends StreamingManager {
                 currentSessionCallback.playPrevious(prvIndex, metaData);
             }
         }
+    }
+
+
+    private int getRandomIndex() {
+        return new Random().nextInt(mediaList.size());
     }
 
     /**
