@@ -33,6 +33,8 @@ public class AudioStreamingManager extends StreamingManager {
     private MediaMetaData currentAudio;
     private List<MediaMetaData> mediaList = new ArrayList<>();
     public static volatile Handler applicationHandler = null;
+    private boolean repeatEnable = false;
+    private boolean shuffleEnable = false;
 
 
     public static AudioStreamingManager getInstance(Context context) {
@@ -66,6 +68,22 @@ public class AudioStreamingManager extends StreamingManager {
 
     public String getCurrentAudioId() {
         return currentAudio != null ? currentAudio.getMediaId() : "";
+    }
+
+    public void setRepeatEnable(boolean repeatEnable) {
+        this.repeatEnable = repeatEnable;
+    }
+
+    public boolean isRepeatEnable() {
+        return repeatEnable;
+    }
+
+    public void setShuffleEnable(boolean shuffleEnable) {
+        this.shuffleEnable = shuffleEnable;
+    }
+
+    public boolean isShuffleEnable() {
+        return shuffleEnable;
     }
 
     public boolean isPlayMultiple() {
@@ -148,6 +166,11 @@ public class AudioStreamingManager extends StreamingManager {
     @Override
     public void onSkipToNext() {
         int nextIndex = index + 1;
+        if (!isValidIndex(true, nextIndex))
+            if (repeatEnable)
+                nextIndex = 0;
+            else return;
+
         if (isValidIndex(true, nextIndex)) {
             MediaMetaData metaData = mediaList.get(nextIndex);
             onPlay(metaData);
@@ -161,6 +184,12 @@ public class AudioStreamingManager extends StreamingManager {
     @Override
     public void onSkipToPrevious() {
         int prvIndex = index - 1;
+
+        if (!isValidIndex(true, prvIndex))
+            if (repeatEnable)
+                prvIndex = mediaList.size() - 1;
+            else return;
+
         if (isValidIndex(false, prvIndex)) {
             MediaMetaData metaData = mediaList.get(prvIndex);
             onPlay(metaData);

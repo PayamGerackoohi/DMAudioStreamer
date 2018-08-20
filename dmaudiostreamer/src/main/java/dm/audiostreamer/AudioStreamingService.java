@@ -5,7 +5,6 @@
  */
 package dm.audiostreamer;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -18,6 +17,7 @@ import android.media.RemoteControlClient;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -26,10 +26,13 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.NotificationTarget;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.bumptech.glide.request.target.Target;
 
 
 public class AudioStreamingService extends Service implements NotificationManager.NotificationCenterDelegate {
@@ -147,7 +150,7 @@ public class AudioStreamingService extends Service implements NotificationManage
         }
         return START_NOT_STICKY;
     }
-
+    Bitmap albumArt = null;
     private void createNotification(MediaMetaData mSongDetail) {
         try {
             String songName = mSongDetail.getMediaTitle();
@@ -181,7 +184,7 @@ public class AudioStreamingService extends Service implements NotificationManage
                 setListeners(expandedView);
             }
 
-            Bitmap albumArt = null;
+
 //            try {
 //                ImageLoader imageLoader = ImageLoader.getInstance();
 //                albumArt = imageLoader.loadImageSync(audioInfo.getMediaArt());
@@ -232,6 +235,18 @@ public class AudioStreamingService extends Service implements NotificationManage
                     .applyDefaultRequestOptions(options)
                     .asBitmap()
                     .load(audioInfo.getMediaArt())
+                    .listener(new RequestListener<Bitmap>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                            albumArt = resource;
+                            return false;
+                        }
+                    })
                     .into(notificationTarget);
 
 
