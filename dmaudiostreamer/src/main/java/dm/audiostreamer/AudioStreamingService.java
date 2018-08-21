@@ -12,6 +12,7 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
@@ -72,6 +73,7 @@ public class AudioStreamingService extends Service implements NotificationManage
 
     @Override
     public void onCreate() {
+        registerReceivers();
         audioStreamingManager = AudioStreamingManager.getInstance(AudioStreamingService.this);
         audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         NotificationManager.getInstance().addObserver(this, NotificationManager.audioProgressDidChanged);
@@ -101,6 +103,26 @@ public class AudioStreamingService extends Service implements NotificationManage
             Log.e("tmessages", e.toString());
         }
         super.onCreate();
+    }
+
+    AudioStreamingReceiver audioStreamingReceiver;
+
+    private void registerReceivers() {
+        audioStreamingReceiver = new AudioStreamingReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("dm.audiostreamer.close");
+        filter.addAction("dm.audiostreamer.pause");
+        filter.addAction("dm.audiostreamer.next");
+        filter.addAction("dm.audiostreamer.play");
+        filter.addAction("dm.audiostreamer.previous");
+        filter.addAction("android.intent.action.MEDIA_BUTTON");
+        filter.addAction("android.media.AUDIO_BECOMING_NOISY");
+        registerReceiver(audioStreamingReceiver, filter);
+    }
+
+    private void unregisterReceivers() {
+        if (audioStreamingReceiver != null)
+            unregisterReceiver(audioStreamingReceiver);
     }
 
     @Override
@@ -350,6 +372,7 @@ public class AudioStreamingService extends Service implements NotificationManage
     @Override
     public void onDestroy() {
         super.onDestroy();
+        unregisterReceivers();
         if (remoteControlClient != null) {
             RemoteControlClient.MetadataEditor metadataEditor = remoteControlClient.editMetadata(true);
             metadataEditor.clear();
