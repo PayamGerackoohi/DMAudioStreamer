@@ -6,14 +6,17 @@
 package dm.audiostreamer;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.RemoteControlClient;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -150,7 +153,9 @@ public class AudioStreamingService extends Service implements NotificationManage
         }
         return START_NOT_STICKY;
     }
+
     Bitmap albumArt = null;
+
     private void createNotification(MediaMetaData mSongDetail) {
         try {
             String songName = mSongDetail.getMediaTitle();
@@ -166,13 +171,34 @@ public class AudioStreamingService extends Service implements NotificationManage
 
 
             Notification notification = null;
-            if (pendingIntent != null) {
-                notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID).setSmallIcon(R.drawable.player)
-                        .setContentIntent(pendingIntent).setContentTitle(songName).build();
-            } else {
-                notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID).setSmallIcon(R.drawable.player)
-                        .setContentTitle(songName).build();
+            CharSequence name = getString(R.string.app_name);
+            boolean androidOPlus = false;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                int importance = android.app.NotificationManager.IMPORTANCE_HIGH;
+                NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+                android.app.NotificationManager mNotificationManager =
+                        (android.app.NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                mChannel.setSound(null, null);
+                if (mNotificationManager != null) {
+                    mNotificationManager.createNotificationChannel(mChannel);
+                }
+
+                androidOPlus = true;
             }
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID).setSmallIcon(R.drawable.player)
+                    .setContentTitle(songName);
+            if (pendingIntent != null)
+                builder = builder.setContentIntent(pendingIntent);
+            if (androidOPlus)
+                builder = builder.setChannelId(CHANNEL_ID);
+
+
+            builder.setSound(Uri.EMPTY);
+
+            notification = builder.build();
+
 
             notification.contentView = simpleContentView;
             if (supportBigNotifications) {
