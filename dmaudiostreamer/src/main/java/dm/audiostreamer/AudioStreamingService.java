@@ -177,7 +177,7 @@ public class AudioStreamingService extends Service implements NotificationManage
     }
 
     Bitmap albumArt = null;
-
+    Notification notification = null;
     private void createNotification(MediaMetaData mSongDetail) {
         try {
             String songName = mSongDetail.getMediaTitle();
@@ -192,11 +192,11 @@ public class AudioStreamingService extends Service implements NotificationManage
             }
 
 
-            Notification notification = null;
+
             CharSequence name = getString(R.string.app_name);
             boolean androidOPlus = false;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                int importance = android.app.NotificationManager.IMPORTANCE_HIGH;
+                int importance = android.app.NotificationManager.IMPORTANCE_LOW;
                 NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
                 android.app.NotificationManager mNotificationManager =
                         (android.app.NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

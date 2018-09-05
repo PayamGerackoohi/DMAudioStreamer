@@ -330,6 +330,7 @@ public class AudioStreamingManager extends StreamingManager {
     public void cleanupPlayer(boolean notify, boolean stopService) {
         handlePauseRequest();
         audioPlayback.stop(true);
+
         if (stopService) {
             Intent intent = new Intent(context, AudioStreamingService.class);
             context.stopService(intent);
