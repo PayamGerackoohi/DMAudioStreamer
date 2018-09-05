@@ -168,10 +168,14 @@ public class AudioStreamingManager extends StreamingManager {
 
     @Override
     public void onSkipToNext() {
+        if (repeatType == SINGLE) {
+            onSeekTo(0);
+            scheduleSeekBarUpdate();
+            currentSessionCallback.playCurrent(index, currentAudio);
+            return;
+        }
         int nextIndex = index + 1;
-        if (repeatType == SINGLE)
-            nextIndex = index;
-        else if (shuffleEnable)
+        if (shuffleEnable)
             nextIndex = getRandomIndex();
         if (!isValidIndex(true, nextIndex))
             if (repeatType == ALL)
@@ -190,10 +194,14 @@ public class AudioStreamingManager extends StreamingManager {
 
     @Override
     public void onSkipToPrevious() {
+        if (repeatType == SINGLE) {
+            onSeekTo(0);
+            scheduleSeekBarUpdate();
+            currentSessionCallback.playCurrent(index, currentAudio);
+            return;
+        }
         int prvIndex = index - 1;
-        if (repeatType == SINGLE)
-            prvIndex = index;
-        else if (shuffleEnable)
+        if (shuffleEnable)
             prvIndex = getRandomIndex();
         if (!isValidIndex(true, prvIndex))
             if (repeatType == ALL)
