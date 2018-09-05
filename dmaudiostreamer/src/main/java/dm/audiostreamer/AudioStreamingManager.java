@@ -20,6 +20,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import static dm.audiostreamer.RepeatType.*;
+
 public class AudioStreamingManager extends StreamingManager {
     private static final String TAG = Logger.makeLogTag(AudioStreamingManager.class);
 
@@ -34,7 +36,7 @@ public class AudioStreamingManager extends StreamingManager {
     private MediaMetaData currentAudio;
     private List<MediaMetaData> mediaList = new ArrayList<>();
     public static volatile Handler applicationHandler = null;
-    private boolean repeatEnable = false;
+    private RepeatType repeatType = NONE;
     private boolean shuffleEnable = false;
 
 
@@ -71,12 +73,12 @@ public class AudioStreamingManager extends StreamingManager {
         return currentAudio != null ? currentAudio.getMediaId() : "";
     }
 
-    public void setRepeatEnable(boolean repeatEnable) {
-        this.repeatEnable = repeatEnable;
+    public void setRepeatType(RepeatType repeatType) {
+        this.repeatType = repeatType;
     }
 
-    public boolean isRepeatEnable() {
-        return repeatEnable;
+    public RepeatType getRepeatType() {
+        return repeatType;
     }
 
     public void setShuffleEnable(boolean shuffleEnable) {
@@ -167,10 +169,12 @@ public class AudioStreamingManager extends StreamingManager {
     @Override
     public void onSkipToNext() {
         int nextIndex = index + 1;
-        if (shuffleEnable)
+        if (repeatType == SINGLE)
+            nextIndex = index;
+        else if (shuffleEnable)
             nextIndex = getRandomIndex();
         if (!isValidIndex(true, nextIndex))
-            if (repeatEnable)
+            if (repeatType == ALL)
                 nextIndex = 0;
             else return;
 
@@ -187,10 +191,12 @@ public class AudioStreamingManager extends StreamingManager {
     @Override
     public void onSkipToPrevious() {
         int prvIndex = index - 1;
-        if (shuffleEnable)
+        if (repeatType == SINGLE)
+            prvIndex = index;
+        else if (shuffleEnable)
             prvIndex = getRandomIndex();
         if (!isValidIndex(true, prvIndex))
-            if (repeatEnable)
+            if (repeatType == ALL)
                 prvIndex = mediaList.size() - 1;
             else return;
 
