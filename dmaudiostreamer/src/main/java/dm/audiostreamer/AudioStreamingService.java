@@ -217,7 +217,7 @@ public class AudioStreamingService extends Service implements NotificationManage
                 builder = builder.setChannelId(CHANNEL_ID);
 
 //            builder.setSound(Uri.EMPTY);
-            builder.setSound(Uri.parse("android.resource://" + getPackageName() + "/raw/silence.mp3"));
+            builder.setSound(Uri.parse("android.resource://" + getPackageName() + "/raw/silence.mp3"), AudioManager.STREAM_ALARM);
 
             notification = builder.build();
 
