@@ -178,6 +178,7 @@ public class AudioStreamingService extends Service implements NotificationManage
 
     Bitmap albumArt = null;
     Notification notification = null;
+
     private void createNotification(MediaMetaData mSongDetail) {
         try {
             String songName = mSongDetail.getMediaTitle();
@@ -190,7 +191,6 @@ public class AudioStreamingService extends Service implements NotificationManage
             if (supportBigNotifications) {
                 expandedView = new RemoteViews(getApplicationContext().getPackageName(), R.layout.player_big_notification);
             }
-
 
 
             CharSequence name = getString(R.string.app_name);
@@ -216,8 +216,8 @@ public class AudioStreamingService extends Service implements NotificationManage
             if (androidOPlus)
                 builder = builder.setChannelId(CHANNEL_ID);
 
-
-            builder.setSound(Uri.EMPTY);
+//            builder.setSound(Uri.EMPTY);
+            builder.setSound(Uri.parse("android.resource://" + getPackageName() + "/raw/silence.mp3"));
 
             notification = builder.build();
 
