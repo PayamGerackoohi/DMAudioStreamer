@@ -5,7 +5,6 @@
  */
 package dm.audiostreamerdemo.network;
 
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;

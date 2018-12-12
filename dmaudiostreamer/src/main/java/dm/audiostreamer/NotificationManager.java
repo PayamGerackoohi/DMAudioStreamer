@@ -28,6 +28,8 @@ public class NotificationManager {
     public static final int newaudioloaded = totalEvents++;
     public static final int setAnyPendingIntent = totalEvents++;
 
+    public static int notifCreated = 0;
+
     private SparseArray<ArrayList<Object>> observers = new SparseArray<ArrayList<Object>>();
     private SparseArray<ArrayList<Object>> removeAfterBroadcast = new SparseArray<ArrayList<Object>>();
     private SparseArray<ArrayList<Object>> addAfterBroadcast = new SparseArray<ArrayList<Object>>();

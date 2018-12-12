@@ -305,7 +305,7 @@ public class AudioPlaybackListener implements PlaybackListener, AudioManager.OnA
         } else {
             Logger.e(TAG, "onAudioFocusChange: Ignoring unsupported focusChange: ", focusChange);
         }
-        configMediaPlayerState();
+//        configMediaPlayerState();
     }
 
     @Override
@@ -407,7 +407,7 @@ public class AudioPlaybackListener implements PlaybackListener, AudioManager.OnA
 
     private void registerAudioNoisyReceiver() {
         try {
-            if (mAudioNoisyReceiver!=null) {
+            if (mAudioNoisyReceiver != null) {
                 mContext.registerReceiver(mAudioNoisyReceiver, mAudioNoisyIntentFilter);
             }
         } catch (Exception e) {
@@ -417,7 +417,7 @@ public class AudioPlaybackListener implements PlaybackListener, AudioManager.OnA
 
     private void unregisterAudioNoisyReceiver() {
         try {
-            if (mAudioNoisyReceiver!=null) {
+            if (mAudioNoisyReceiver != null) {
                 mContext.unregisterReceiver(mAudioNoisyReceiver);
             }
         } catch (Exception e) {

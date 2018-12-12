@@ -10,6 +10,7 @@ import android.app.NotificationChannel;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -37,7 +38,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.NotificationTarget;
 import com.bumptech.glide.request.target.Target;
-
 
 public class AudioStreamingService extends Service implements NotificationManager.NotificationCenterDelegate {
     private static final String TAG = Logger.makeLogTag(AudioStreamingService.class);
@@ -73,6 +73,7 @@ public class AudioStreamingService extends Service implements NotificationManage
 
     @Override
     public void onCreate() {
+        System.out.println("****** onCreate is called.");
         registerReceivers();
         audioStreamingManager = AudioStreamingManager.getInstance(AudioStreamingService.this);
         audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
@@ -83,6 +84,7 @@ public class AudioStreamingService extends Service implements NotificationManage
             phoneStateListener = new PhoneStateListener() {
                 @Override
                 public void onCallStateChanged(int state, String incomingNumber) {
+                    System.out.println("****** onCallStateChanged is called.");
                     if (state == TelephonyManager.CALL_STATE_RINGING) {
                         if (audioStreamingManager.isPlaying()) {
                             audioStreamingManager.handlePauseRequest();
@@ -108,6 +110,7 @@ public class AudioStreamingService extends Service implements NotificationManage
     AudioStreamingReceiver audioStreamingReceiver;
 
     private void registerReceivers() {
+        System.out.println("****** registerReceivers is called.");
         audioStreamingReceiver = new AudioStreamingReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("dm.audiostreamer.close");
@@ -121,12 +124,15 @@ public class AudioStreamingService extends Service implements NotificationManage
     }
 
     private void unregisterReceivers() {
+        System.out.println("****** unregisterReceivers is called.");
         if (audioStreamingReceiver != null)
             unregisterReceiver(audioStreamingReceiver);
     }
 
     @Override
     public int onStartCommand(Intent startIntent, int flags, int startId) {
+        System.out.println("****** onStartCommand is called.");
+        NotificationManager.notifCreated = 0;
         try {
             MediaMetaData messageObject = AudioStreamingManager.getInstance(AudioStreamingService.this).getCurrentAudio();
             if (messageObject == null) {
@@ -180,6 +186,7 @@ public class AudioStreamingService extends Service implements NotificationManage
     Notification notification = null;
 
     private void createNotification(MediaMetaData mSongDetail) {
+        System.out.println("****** createNotification is called.");
         try {
             String songName = mSongDetail.getMediaTitle();
             String authorName = mSongDetail.getMediaArtist();
@@ -217,10 +224,14 @@ public class AudioStreamingService extends Service implements NotificationManage
                 builder = builder.setChannelId(CHANNEL_ID);
 
 //            builder.setSound(Uri.EMPTY);
-            builder.setSound(Uri.parse("android.resource://" + getPackageName() + "/raw/silence.mp3"), AudioManager.STREAM_ALARM);
+            System.out.println("****** raw.path1<" + "android.resource://" + getPackageName() + "/raw/silence.mp3" + ">");
+            System.out.println("****** raw.path2<" + ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.silence + ">");
+//            builder.setSound(Uri.parse("android.resource://" + getPackageName() + "/raw/silence"), AudioManager.STREAM_NOTIFICATION);
+//            builder.setSound(Uri.parse("android.resource://" + getPackageName() + "/raw/silence.mp3"), AudioManager.STREAM_NOTIFICATION);
+            builder.setSound(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.silence));
+//            builder.setSound(Uri.parse("android.resource://dm.audiostreamerdemo/" + R.raw.silence));
 
             notification = builder.build();
-
 
             notification.contentView = simpleContentView;
             if (supportBigNotifications) {
@@ -231,7 +242,6 @@ public class AudioStreamingService extends Service implements NotificationManage
             if (supportBigNotifications) {
                 setListeners(expandedView);
             }
-
 
 //            try {
 //                ImageLoader imageLoader = ImageLoader.getInstance();
@@ -371,6 +381,7 @@ public class AudioStreamingService extends Service implements NotificationManage
 
     @Override
     public void onDestroy() {
+        System.out.println("****** onDestroy is called.");
         super.onDestroy();
         unregisterReceivers();
         if (remoteControlClient != null) {
@@ -393,12 +404,15 @@ public class AudioStreamingService extends Service implements NotificationManage
 
     @Override
     public void didReceivedNotification(int id, Object... args) {
+        System.out.println("****** didReceivedNotification is called: id<" + id + "> NC<" + NotificationManager.notifCreated + ">");
         if (id == NotificationManager.setAnyPendingIntent) {
             PendingIntent pendingIntent = (PendingIntent) args[0];
             if (pendingIntent != null) {
                 this.pendingIntent = pendingIntent;
             }
-        } else if (id == NotificationManager.audioPlayStateChanged) {
+        } else if (id == NotificationManager.audioPlayStateChanged && NotificationManager.notifCreated < 10) {
+            NotificationManager.notifCreated++;
+//            AudioPlaybackListener.onAudioFocusChange
             MediaMetaData mSongDetail = AudioStreamingManager.getInstance(AudioStreamingService.this).getCurrentAudio();
             if (mSongDetail != null) {
                 createNotification(mSongDetail);
@@ -410,6 +424,5 @@ public class AudioStreamingService extends Service implements NotificationManage
 
     @Override
     public void newSongLoaded(Object... args) {
-
     }
 }
