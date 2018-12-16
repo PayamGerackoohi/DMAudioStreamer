@@ -199,7 +199,6 @@ public class AudioStreamingService extends Service implements NotificationManage
                 expandedView = new RemoteViews(getApplicationContext().getPackageName(), R.layout.player_big_notification);
             }
 
-
             CharSequence name = getString(R.string.app_name);
             boolean androidOPlus = false;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -207,12 +206,10 @@ public class AudioStreamingService extends Service implements NotificationManage
                 NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
                 android.app.NotificationManager mNotificationManager =
                         (android.app.NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
                 mChannel.setSound(null, null);
                 if (mNotificationManager != null) {
                     mNotificationManager.createNotificationChannel(mChannel);
                 }
-
                 androidOPlus = true;
             }
 
@@ -224,8 +221,8 @@ public class AudioStreamingService extends Service implements NotificationManage
                 builder = builder.setChannelId(CHANNEL_ID);
 
 //            builder.setSound(Uri.EMPTY);
-            System.out.println("****** raw.path1<" + "android.resource://" + getPackageName() + "/raw/silence.mp3" + ">");
-            System.out.println("****** raw.path2<" + ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.silence + ">");
+//            System.out.println("****** raw.path1<" + "android.resource://" + getPackageName() + "/raw/silence.mp3" + ">");
+//            System.out.println("****** raw.path2<" + ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.silence + ">");
 //            builder.setSound(Uri.parse("android.resource://" + getPackageName() + "/raw/silence"), AudioManager.STREAM_NOTIFICATION);
 //            builder.setSound(Uri.parse("android.resource://" + getPackageName() + "/raw/silence.mp3"), AudioManager.STREAM_NOTIFICATION);
             builder.setSound(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.silence));
