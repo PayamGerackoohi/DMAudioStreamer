@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.RemoteControlClient;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -225,8 +226,10 @@ public class AudioStreamingService extends Service implements NotificationManage
 //            System.out.println("****** raw.path2<" + ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.silence + ">");
 //            builder.setSound(Uri.parse("android.resource://" + getPackageName() + "/raw/silence"), AudioManager.STREAM_NOTIFICATION);
 //            builder.setSound(Uri.parse("android.resource://" + getPackageName() + "/raw/silence.mp3"), AudioManager.STREAM_NOTIFICATION);
-            builder.setSound(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.silence));
 //            builder.setSound(Uri.parse("android.resource://dm.audiostreamerdemo/" + R.raw.silence));
+//            builder.setSound(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.silence));
+//            builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+            builder.setSound(RingtoneManager.getDefaultUri(R.raw.silence));
 
             notification = builder.build();
 
@@ -350,9 +353,7 @@ public class AudioStreamingService extends Service implements NotificationManage
                 metadataEditor.apply();
             }
         } catch (
-                Exception e)
-
-        {
+                Exception e) {
             e.printStackTrace();
         }
 
